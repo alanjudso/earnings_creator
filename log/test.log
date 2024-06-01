@@ -1,0 +1,775 @@
+  [1m[35m (1.5ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL PRIMARY KEY)[0m
+  [1m[35m (0.9ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying NOT NULL PRIMARY KEY, "value" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (0.0ms)[0m  [1m[34mSELECT pg_try_advisory_lock(90920410499886660)[0m
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to CreateUsers (20240527233507)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (2.2ms)[0m  [1m[35mCREATE TABLE "users" ("id" bigserial primary key, "name" character varying, "email" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20240527233507"]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateEmployers (20240531161123)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (1.2ms)[0m  [1m[35mCREATE TABLE "employers" ("id" bigserial primary key, "name" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20240531161123"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateEmployees (20240531161528)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (1.9ms)[0m  [1m[35mCREATE TABLE "employees" ("id" bigserial primary key, "name" character varying, "external_ref" character varying, "employer_id" bigint NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_f9eb73456e"
+FOREIGN KEY ("employer_id")
+  REFERENCES "employers" ("id")
+)[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE INDEX "index_employees_on_employer_id" ON "employees" ("employer_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20240531161528"]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateEarnings (20240531161951)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (1.0ms)[0m  [1m[35mCREATE TABLE "earnings" ("id" bigserial primary key, "earning_date" date, "amount" decimal, "employee_id" bigint NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_7869e0dd26"
+FOREIGN KEY ("employee_id")
+  REFERENCES "employees" ("id")
+)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_earnings_on_employee_id" ON "earnings" ("employee_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.0ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20240531161951"]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateEmployerCsvFormats (20240531164242)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.8ms)[0m  [1m[35mCREATE TABLE "employer_csv_formats" ("id" bigserial primary key, "external_ref_header" character varying, "date_header" character varying, "date_format" character varying, "amount_header" character varying, "amount_format" character varying, "employer_id" bigint NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_c07a831777"
+FOREIGN KEY ("employer_id")
+  REFERENCES "employers" ("id")
+)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_employer_csv_formats_on_employer_id" ON "employer_csv_formats" ("employer_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.0ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20240531164242"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mActiveRecord::InternalMetadata Create (0.1ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "environment"], ["value", "test"], ["created_at", "2024-06-01 16:50:34.058405"], ["updated_at", "2024-06-01 16:50:34.058405"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT pg_advisory_unlock(90920410499886660)[0m
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (1.7ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL PRIMARY KEY)[0m
+  [1m[35m (2.3ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying NOT NULL PRIMARY KEY, "value" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (0.0ms)[0m  [1m[34mSELECT pg_try_advisory_lock(5806263842556168285)[0m
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to CreateUsers (20240527233507)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (2.1ms)[0m  [1m[35mCREATE TABLE "users" ("id" bigserial primary key, "name" character varying, "email" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20240527233507"]]
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateEmployers (20240531161123)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (3.0ms)[0m  [1m[35mCREATE TABLE "employers" ("id" bigserial primary key, "name" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20240531161123"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateEmployees (20240531161528)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (1.9ms)[0m  [1m[35mCREATE TABLE "employees" ("id" bigserial primary key, "name" character varying, "external_ref" character varying, "employer_id" bigint NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_f9eb73456e"
+FOREIGN KEY ("employer_id")
+  REFERENCES "employers" ("id")
+)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_employees_on_employer_id" ON "employees" ("employer_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.0ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20240531161528"]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateEarnings (20240531161951)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (1.1ms)[0m  [1m[35mCREATE TABLE "earnings" ("id" bigserial primary key, "earning_date" date, "amount" decimal, "employee_id" bigint NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_7869e0dd26"
+FOREIGN KEY ("employee_id")
+  REFERENCES "employees" ("id")
+)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_earnings_on_employee_id" ON "earnings" ("employee_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.0ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20240531161951"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateEmployerCsvFormats (20240531164242)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (1.0ms)[0m  [1m[35mCREATE TABLE "employer_csv_formats" ("id" bigserial primary key, "external_ref_header" character varying, "date_header" character varying, "date_format" character varying, "amount_header" character varying, "amount_format" character varying, "employer_id" bigint NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_c07a831777"
+FOREIGN KEY ("employer_id")
+  REFERENCES "employers" ("id")
+)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_employer_csv_formats_on_employer_id" ON "employer_csv_formats" ("employer_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20240531164242"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mActiveRecord::InternalMetadata Create (0.2ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "environment"], ["value", "test"], ["created_at", "2024-06-01 17:19:39.715037"], ["updated_at", "2024-06-01 17:19:39.715037"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT pg_advisory_unlock(5806263842556168285)[0m
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Pluck (0.1ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "schema_sha1"], ["LIMIT", 1]]
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Pluck (0.3ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Pluck (0.1ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Pluck (0.1ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[35m (64.9ms)[0m  [1m[35mDROP DATABASE IF EXISTS "earnings_creator_test"[0m
+  [1m[35m (65.8ms)[0m  [1m[35mCREATE DATABASE "earnings_creator_test" ENCODING = 'unicode'[0m
+  [1m[35mSQL (0.0ms)[0m  [1m[35mCREATE EXTENSION IF NOT EXISTS "plpgsql"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "earnings" CASCADE[0m
+  [1m[35m (1.7ms)[0m  [1m[35mCREATE TABLE "earnings" ("id" bigserial primary key, "earning_date" date, "amount" decimal, "employee_id" bigint NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE INDEX "index_earnings_on_employee_id" ON "earnings" ("employee_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "employees" CASCADE[0m
+  [1m[35m (1.1ms)[0m  [1m[35mCREATE TABLE "employees" ("id" bigserial primary key, "name" character varying, "external_ref" character varying, "employer_id" bigint NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE INDEX "index_employees_on_employer_id" ON "employees" ("employer_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "employer_csv_formats" CASCADE[0m
+  [1m[35m (0.9ms)[0m  [1m[35mCREATE TABLE "employer_csv_formats" ("id" bigserial primary key, "external_ref_header" character varying, "date_header" character varying, "date_format" character varying, "amount_header" character varying, "amount_format" character varying, "employer_id" bigint NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE INDEX "index_employer_csv_formats_on_employer_id" ON "employer_csv_formats" ("employer_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "employers" CASCADE[0m
+  [1m[35m (0.8ms)[0m  [1m[35mCREATE TABLE "employers" ("id" bigserial primary key, "name" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "users" CASCADE[0m
+  [1m[35m (0.8ms)[0m  [1m[35mCREATE TABLE "users" ("id" bigserial primary key, "name" character varying, "email" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (0.6ms)[0m  [1m[35mALTER TABLE "earnings" ADD CONSTRAINT "fk_rails_7869e0dd26"
+FOREIGN KEY ("employee_id")
+  REFERENCES "employees" ("id")
+[0m
+  [1m[35m (0.3ms)[0m  [1m[35mALTER TABLE "employees" ADD CONSTRAINT "fk_rails_f9eb73456e"
+FOREIGN KEY ("employer_id")
+  REFERENCES "employers" ("id")
+[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "employer_csv_formats" ADD CONSTRAINT "fk_rails_c07a831777"
+FOREIGN KEY ("employer_id")
+  REFERENCES "employers" ("id")
+[0m
+  [1m[35m (0.8ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL PRIMARY KEY)[0m
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES (20240531164242)[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES
+(20240527233507),
+(20240531161123),
+(20240531161528),
+(20240531161951);
+
+[0m
+  [1m[35m (0.8ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying NOT NULL PRIMARY KEY, "value" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mActiveRecord::InternalMetadata Create (0.1ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "environment"], ["value", "test"], ["created_at", "2024-06-01 17:24:13.460723"], ["updated_at", "2024-06-01 17:24:13.460723"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.0ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[36mActiveRecord::InternalMetadata Load (0.0ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "schema_sha1"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mActiveRecord::InternalMetadata Create (0.0ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "schema_sha1"], ["value", "193688ab5055022b1f9c9947459045190c26d341"], ["created_at", "2024-06-01 17:24:13.462025"], ["updated_at", "2024-06-01 17:24:13.462025"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "schema_migrations" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "employees" DISABLE TRIGGER ALL;ALTER TABLE "earnings" DISABLE TRIGGER ALL;ALTER TABLE "employers" DISABLE TRIGGER ALL;ALTER TABLE "employer_csv_formats" DISABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" DISABLE TRIGGER ALL[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (1.0ms)[0m  [1m[31mDELETE FROM "earnings";
+DELETE FROM "employees";
+DELETE FROM "employer_csv_formats";
+DELETE FROM "employers";
+DELETE FROM "users";
+INSERT INTO "earnings" ("id", "earning_date", "amount", "employee_id", "created_at", "updated_at") VALUES (980190962, '2024-05-31', 9.99, 980190962, '2024-06-01 17:24:13.517487', '2024-06-01 17:24:13.517487'), (298486374, '2024-05-31', 9.99, 298486374, '2024-06-01 17:24:13.517487', '2024-06-01 17:24:13.517487');
+INSERT INTO "employees" ("id", "name", "external_ref", "employer_id", "created_at", "updated_at") VALUES (980190962, 'MyString', 'MyString', 980190962, '2024-06-01 17:24:13.519989', '2024-06-01 17:24:13.519989'), (298486374, 'MyString', 'MyString', 298486374, '2024-06-01 17:24:13.519989', '2024-06-01 17:24:13.519989');
+INSERT INTO "employer_csv_formats" ("id", "external_ref_header", "date_header", "date_format", "amount_header", "amount_format", "employer_id", "created_at", "updated_at") VALUES (980190962, 'MyString', 'MyString', 'MyString', 'MyString', 'MyString', 980190962, '2024-06-01 17:24:13.520979', '2024-06-01 17:24:13.520979'), (298486374, 'MyString', 'MyString', 'MyString', 'MyString', 'MyString', 298486374, '2024-06-01 17:24:13.520979', '2024-06-01 17:24:13.520979');
+INSERT INTO "employers" ("id", "name", "created_at", "updated_at") VALUES (980190962, 'MyString', '2024-06-01 17:24:13.522103', '2024-06-01 17:24:13.522103'), (298486374, 'MyString', '2024-06-01 17:24:13.522103', '2024-06-01 17:24:13.522103');
+INSERT INTO "users" ("id", "name", "email", "created_at", "updated_at") VALUES (980190962, 'MyString', 'MyString', '2024-06-01 17:24:13.522628', '2024-06-01 17:24:13.522628'), (298486374, 'MyString', 'MyString', '2024-06-01 17:24:13.522628', '2024-06-01 17:24:13.522628')[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.3ms)[0m  [1m[35mALTER TABLE "schema_migrations" ENABLE TRIGGER ALL;ALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "employees" ENABLE TRIGGER ALL;ALTER TABLE "earnings" ENABLE TRIGGER ALL;ALTER TABLE "employers" ENABLE TRIGGER ALL;ALTER TABLE "employer_csv_formats" ENABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" ENABLE TRIGGER ALL[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (3.7ms)[0m  [1m[35mdo $$
+  declare r record;
+BEGIN
+FOR r IN (
+  SELECT FORMAT(
+    'UPDATE pg_constraint SET convalidated=false WHERE conname = ''%I'' AND connamespace::regnamespace = ''%I''::regnamespace; ALTER TABLE %I.%I VALIDATE CONSTRAINT %I;',
+    constraint_name,
+    table_schema,
+    table_schema,
+    table_name,
+    constraint_name
+  ) AS constraint_check
+  FROM information_schema.table_constraints WHERE constraint_type = 'FOREIGN KEY'
+)
+  LOOP
+    EXECUTE (r.constraint_check);
+  END LOOP;
+END;
+$$;
+[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+----------------------------------------------------------------------
+EarningsCsvParserTest: test_should_create_earnings_for_second_employer
+----------------------------------------------------------------------
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployer Create (0.1ms)[0m  [1m[32mINSERT INTO "employers" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Acme Co"], ["created_at", "2024-06-01 17:24:13.549952"], ["updated_at", "2024-06-01 17:24:13.549952"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployer Create (0.1ms)[0m  [1m[32mINSERT INTO "employers" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "BetaCo"], ["created_at", "2024-06-01 17:24:13.550893"], ["updated_at", "2024-06-01 17:24:13.550893"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployer Create (0.0ms)[0m  [1m[32mINSERT INTO "employers" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "GammaCo"], ["created_at", "2024-06-01 17:24:13.551199"], ["updated_at", "2024-06-01 17:24:13.551199"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.2ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Alan Judson"], ["external_ref", "A123"], ["employer_id", 980190963], ["created_at", "2024-06-01 17:24:13.556022"], ["updated_at", "2024-06-01 17:24:13.556022"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.1ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Danila Szabo"], ["external_ref", "B456"], ["employer_id", 980190963], ["created_at", "2024-06-01 17:24:13.556577"], ["updated_at", "2024-06-01 17:24:13.556577"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.0ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Daniel Sabourin"], ["external_ref", "123"], ["employer_id", 980190964], ["created_at", "2024-06-01 17:24:13.556992"], ["updated_at", "2024-06-01 17:24:13.556992"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.0ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Yuval Kordov"], ["external_ref", "456"], ["employer_id", 980190964], ["created_at", "2024-06-01 17:24:13.557325"], ["updated_at", "2024-06-01 17:24:13.557325"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.0ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Daniel Johnston"], ["external_ref", "789"], ["employer_id", 980190965], ["created_at", "2024-06-01 17:24:13.557701"], ["updated_at", "2024-06-01 17:24:13.557701"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployerCsvFormat Create (0.1ms)[0m  [1m[32mINSERT INTO "employer_csv_formats" ("external_ref_header", "date_header", "date_format", "amount_header", "amount_format", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["external_ref_header", "EmployeeNumber"], ["date_header", "CheckDate"], ["date_format", "%m/%d/%Y"], ["amount_header", "Amount"], ["amount_format", "STRING"], ["employer_id", 980190963], ["created_at", "2024-06-01 17:24:13.559789"], ["updated_at", "2024-06-01 17:24:13.559789"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployerCsvFormat Create (0.1ms)[0m  [1m[32mINSERT INTO "employer_csv_formats" ("external_ref_header", "date_header", "date_format", "amount_header", "amount_format", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["external_ref_header", "employee"], ["date_header", "earningDate"], ["date_format", "%Y-%m-%d"], ["amount_header", "netAmount"], ["amount_format", "DECIMAL"], ["employer_id", 980190964], ["created_at", "2024-06-01 17:24:13.560210"], ["updated_at", "2024-06-01 17:24:13.560210"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mEmployer Load (0.0ms)[0m  [1m[34mSELECT "employers".* FROM "employers" WHERE "employers"."id" = $1 LIMIT $2[0m  [["id", 980190964], ["LIMIT", 1]]
+  [1m[36mEmployerCsvFormat Load (0.0ms)[0m  [1m[34mSELECT "employer_csv_formats".* FROM "employer_csv_formats" WHERE "employer_csv_formats"."employer_id" = $1 LIMIT $2[0m  [["employer_id", 980190964], ["LIMIT", 1]]
+  [1m[36mEarning Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "earnings"[0m
+  [1m[36mEmployee Load (0.0ms)[0m  [1m[34mSELECT "employees".* FROM "employees" WHERE "employees"."external_ref" = $1 AND "employees"."employer_id" = $2 LIMIT $3[0m  [["external_ref", "123"], ["employer_id", 980190964], ["LIMIT", 1]]
+  [1m[36mEmployee Load (0.0ms)[0m  [1m[34mSELECT "employees".* FROM "employees" WHERE "employees"."id" = $1 LIMIT $2[0m  [["id", 980190965], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEarning Create (0.1ms)[0m  [1m[32mINSERT INTO "earnings" ("earning_date", "amount", "employee_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["earning_date", "2021-12-14"], ["amount", "800.5"], ["employee_id", 980190965], ["created_at", "2024-06-01 17:24:13.569446"], ["updated_at", "2024-06-01 17:24:13.569446"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mEmployee Load (0.0ms)[0m  [1m[34mSELECT "employees".* FROM "employees" WHERE "employees"."external_ref" = $1 AND "employees"."employer_id" = $2 LIMIT $3[0m  [["external_ref", "456"], ["employer_id", 980190964], ["LIMIT", 1]]
+  [1m[36mEmployee Load (0.0ms)[0m  [1m[34mSELECT "employees".* FROM "employees" WHERE "employees"."id" = $1 LIMIT $2[0m  [["id", 980190966], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEarning Create (0.1ms)[0m  [1m[32mINSERT INTO "earnings" ("earning_date", "amount", "employee_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["earning_date", "2021-12-21"], ["amount", "740.0"], ["employee_id", 980190966], ["created_at", "2024-06-01 17:24:13.570203"], ["updated_at", "2024-06-01 17:24:13.570203"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mEarning Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "earnings"[0m
+  [1m[36mEmployee Pluck (0.0ms)[0m  [1m[34mSELECT "employees"."id" FROM "employees" WHERE "employees"."employer_id" = $1[0m  [["employer_id", 980190964]]
+  [1m[36mEarning Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "earnings" WHERE "earnings"."employee_id" IN ($1, $2)[0m  [["employee_id", 980190965], ["employee_id", 980190966]]
+  [1m[36mEarning Load (0.0ms)[0m  [1m[34mSELECT "earnings".* FROM "earnings" WHERE "earnings"."employee_id" IN ($1, $2)[0m  [["employee_id", 980190965], ["employee_id", 980190966]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+--------------------------------------------------------------------------------
+EarningsCsvParserTest: test_show_return_errors_if_there's_no_employer_csv_format
+--------------------------------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployer Create (0.0ms)[0m  [1m[32mINSERT INTO "employers" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Acme Co"], ["created_at", "2024-06-01 17:24:13.571799"], ["updated_at", "2024-06-01 17:24:13.571799"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployer Create (0.0ms)[0m  [1m[32mINSERT INTO "employers" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "BetaCo"], ["created_at", "2024-06-01 17:24:13.572106"], ["updated_at", "2024-06-01 17:24:13.572106"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployer Create (0.0ms)[0m  [1m[32mINSERT INTO "employers" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "GammaCo"], ["created_at", "2024-06-01 17:24:13.572352"], ["updated_at", "2024-06-01 17:24:13.572352"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.1ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Alan Judson"], ["external_ref", "A123"], ["employer_id", 980190966], ["created_at", "2024-06-01 17:24:13.572717"], ["updated_at", "2024-06-01 17:24:13.572717"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.0ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Danila Szabo"], ["external_ref", "B456"], ["employer_id", 980190966], ["created_at", "2024-06-01 17:24:13.573067"], ["updated_at", "2024-06-01 17:24:13.573067"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.0ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Daniel Sabourin"], ["external_ref", "123"], ["employer_id", 980190967], ["created_at", "2024-06-01 17:24:13.573434"], ["updated_at", "2024-06-01 17:24:13.573434"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.0ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Yuval Kordov"], ["external_ref", "456"], ["employer_id", 980190967], ["created_at", "2024-06-01 17:24:13.573745"], ["updated_at", "2024-06-01 17:24:13.573745"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.0ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Daniel Johnston"], ["external_ref", "789"], ["employer_id", 980190968], ["created_at", "2024-06-01 17:24:13.574097"], ["updated_at", "2024-06-01 17:24:13.574097"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployerCsvFormat Create (0.0ms)[0m  [1m[32mINSERT INTO "employer_csv_formats" ("external_ref_header", "date_header", "date_format", "amount_header", "amount_format", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["external_ref_header", "EmployeeNumber"], ["date_header", "CheckDate"], ["date_format", "%m/%d/%Y"], ["amount_header", "Amount"], ["amount_format", "STRING"], ["employer_id", 980190966], ["created_at", "2024-06-01 17:24:13.574382"], ["updated_at", "2024-06-01 17:24:13.574382"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployerCsvFormat Create (0.0ms)[0m  [1m[32mINSERT INTO "employer_csv_formats" ("external_ref_header", "date_header", "date_format", "amount_header", "amount_format", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["external_ref_header", "employee"], ["date_header", "earningDate"], ["date_format", "%Y-%m-%d"], ["amount_header", "netAmount"], ["amount_format", "DECIMAL"], ["employer_id", 980190967], ["created_at", "2024-06-01 17:24:13.574698"], ["updated_at", "2024-06-01 17:24:13.574698"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mEmployer Load (0.0ms)[0m  [1m[34mSELECT "employers".* FROM "employers" WHERE "employers"."id" = $1 LIMIT $2[0m  [["id", 980190968], ["LIMIT", 1]]
+  [1m[36mEmployerCsvFormat Load (0.0ms)[0m  [1m[34mSELECT "employer_csv_formats".* FROM "employer_csv_formats" WHERE "employer_csv_formats"."employer_id" = $1 LIMIT $2[0m  [["employer_id", 980190968], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+-------------------------------------------------------------------------
+EarningsCsvParserTest: test_should_not_create_earning_if_validations_fail
+-------------------------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployer Create (0.0ms)[0m  [1m[32mINSERT INTO "employers" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Acme Co"], ["created_at", "2024-06-01 17:24:13.575494"], ["updated_at", "2024-06-01 17:24:13.575494"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployer Create (0.0ms)[0m  [1m[32mINSERT INTO "employers" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "BetaCo"], ["created_at", "2024-06-01 17:24:13.575745"], ["updated_at", "2024-06-01 17:24:13.575745"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployer Create (0.0ms)[0m  [1m[32mINSERT INTO "employers" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "GammaCo"], ["created_at", "2024-06-01 17:24:13.575970"], ["updated_at", "2024-06-01 17:24:13.575970"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.0ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Alan Judson"], ["external_ref", "A123"], ["employer_id", 980190969], ["created_at", "2024-06-01 17:24:13.576315"], ["updated_at", "2024-06-01 17:24:13.576315"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.0ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Danila Szabo"], ["external_ref", "B456"], ["employer_id", 980190969], ["created_at", "2024-06-01 17:24:13.576629"], ["updated_at", "2024-06-01 17:24:13.576629"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.0ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Daniel Sabourin"], ["external_ref", "123"], ["employer_id", 980190970], ["created_at", "2024-06-01 17:24:13.576973"], ["updated_at", "2024-06-01 17:24:13.576973"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.0ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Yuval Kordov"], ["external_ref", "456"], ["employer_id", 980190970], ["created_at", "2024-06-01 17:24:13.577279"], ["updated_at", "2024-06-01 17:24:13.577279"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.0ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Daniel Johnston"], ["external_ref", "789"], ["employer_id", 980190971], ["created_at", "2024-06-01 17:24:13.577642"], ["updated_at", "2024-06-01 17:24:13.577642"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployerCsvFormat Create (0.3ms)[0m  [1m[32mINSERT INTO "employer_csv_formats" ("external_ref_header", "date_header", "date_format", "amount_header", "amount_format", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["external_ref_header", "EmployeeNumber"], ["date_header", "CheckDate"], ["date_format", "%m/%d/%Y"], ["amount_header", "Amount"], ["amount_format", "STRING"], ["employer_id", 980190969], ["created_at", "2024-06-01 17:24:13.577925"], ["updated_at", "2024-06-01 17:24:13.577925"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployerCsvFormat Create (0.1ms)[0m  [1m[32mINSERT INTO "employer_csv_formats" ("external_ref_header", "date_header", "date_format", "amount_header", "amount_format", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["external_ref_header", "employee"], ["date_header", "earningDate"], ["date_format", "%Y-%m-%d"], ["amount_header", "netAmount"], ["amount_format", "DECIMAL"], ["employer_id", 980190970], ["created_at", "2024-06-01 17:24:13.578656"], ["updated_at", "2024-06-01 17:24:13.578656"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mEmployer Load (0.1ms)[0m  [1m[34mSELECT "employers".* FROM "employers" WHERE "employers"."id" = $1 LIMIT $2[0m  [["id", 980190969], ["LIMIT", 1]]
+  [1m[36mEmployerCsvFormat Load (0.1ms)[0m  [1m[34mSELECT "employer_csv_formats".* FROM "employer_csv_formats" WHERE "employer_csv_formats"."employer_id" = $1 LIMIT $2[0m  [["employer_id", 980190969], ["LIMIT", 1]]
+Invalid date: NOT_A_DATE cannot be parsed with format %m/%d/%Y
+  [1m[36mEmployee Load (0.1ms)[0m  [1m[34mSELECT "employees".* FROM "employees" WHERE "employees"."external_ref" = $1 AND "employees"."employer_id" = $2 LIMIT $3[0m  [["external_ref", "A123"], ["employer_id", 980190969], ["LIMIT", 1]]
+  [1m[36mEmployee Load (0.0ms)[0m  [1m[34mSELECT "employees".* FROM "employees" WHERE "employees"."id" = $1 LIMIT $2[0m  [["id", 980190973], ["LIMIT", 1]]
+There were errors with the following rows: 
+Error with row A123,NOT_A_DATE,$49.99
+: ["Earning date can't be blank"]
+  [1m[36mEarning Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "earnings"[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+---------------------------------------------------------------------
+EarningsCsvParserTest: test_show_return_errors_if_there's_no_employer
+---------------------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployer Create (0.1ms)[0m  [1m[32mINSERT INTO "employers" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Acme Co"], ["created_at", "2024-06-01 17:24:13.582858"], ["updated_at", "2024-06-01 17:24:13.582858"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployer Create (0.0ms)[0m  [1m[32mINSERT INTO "employers" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "BetaCo"], ["created_at", "2024-06-01 17:24:13.583212"], ["updated_at", "2024-06-01 17:24:13.583212"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployer Create (0.0ms)[0m  [1m[32mINSERT INTO "employers" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "GammaCo"], ["created_at", "2024-06-01 17:24:13.583472"], ["updated_at", "2024-06-01 17:24:13.583472"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.0ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Alan Judson"], ["external_ref", "A123"], ["employer_id", 980190972], ["created_at", "2024-06-01 17:24:13.583874"], ["updated_at", "2024-06-01 17:24:13.583874"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.0ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Danila Szabo"], ["external_ref", "B456"], ["employer_id", 980190972], ["created_at", "2024-06-01 17:24:13.584256"], ["updated_at", "2024-06-01 17:24:13.584256"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.0ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Daniel Sabourin"], ["external_ref", "123"], ["employer_id", 980190973], ["created_at", "2024-06-01 17:24:13.584686"], ["updated_at", "2024-06-01 17:24:13.584686"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.1ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Yuval Kordov"], ["external_ref", "456"], ["employer_id", 980190973], ["created_at", "2024-06-01 17:24:13.585043"], ["updated_at", "2024-06-01 17:24:13.585043"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.0ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Daniel Johnston"], ["external_ref", "789"], ["employer_id", 980190974], ["created_at", "2024-06-01 17:24:13.585454"], ["updated_at", "2024-06-01 17:24:13.585454"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployerCsvFormat Create (0.0ms)[0m  [1m[32mINSERT INTO "employer_csv_formats" ("external_ref_header", "date_header", "date_format", "amount_header", "amount_format", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["external_ref_header", "EmployeeNumber"], ["date_header", "CheckDate"], ["date_format", "%m/%d/%Y"], ["amount_header", "Amount"], ["amount_format", "STRING"], ["employer_id", 980190972], ["created_at", "2024-06-01 17:24:13.585780"], ["updated_at", "2024-06-01 17:24:13.585780"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployerCsvFormat Create (0.0ms)[0m  [1m[32mINSERT INTO "employer_csv_formats" ("external_ref_header", "date_header", "date_format", "amount_header", "amount_format", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["external_ref_header", "employee"], ["date_header", "earningDate"], ["date_format", "%Y-%m-%d"], ["amount_header", "netAmount"], ["amount_format", "DECIMAL"], ["employer_id", 980190973], ["created_at", "2024-06-01 17:24:13.586085"], ["updated_at", "2024-06-01 17:24:13.586085"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mEmployer Load (0.0ms)[0m  [1m[34mSELECT "employers".* FROM "employers" WHERE "employers"."id" = $1 LIMIT $2[0m  [["id", 999], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+---------------------------------------------------------------------
+EarningsCsvParserTest: test_should_create_earnings_for_first_employer
+---------------------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployer Create (0.0ms)[0m  [1m[32mINSERT INTO "employers" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Acme Co"], ["created_at", "2024-06-01 17:24:13.586766"], ["updated_at", "2024-06-01 17:24:13.586766"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployer Create (0.0ms)[0m  [1m[32mINSERT INTO "employers" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "BetaCo"], ["created_at", "2024-06-01 17:24:13.587027"], ["updated_at", "2024-06-01 17:24:13.587027"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployer Create (0.0ms)[0m  [1m[32mINSERT INTO "employers" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "GammaCo"], ["created_at", "2024-06-01 17:24:13.587284"], ["updated_at", "2024-06-01 17:24:13.587284"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.0ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Alan Judson"], ["external_ref", "A123"], ["employer_id", 980190975], ["created_at", "2024-06-01 17:24:13.587634"], ["updated_at", "2024-06-01 17:24:13.587634"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.1ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Danila Szabo"], ["external_ref", "B456"], ["employer_id", 980190975], ["created_at", "2024-06-01 17:24:13.587955"], ["updated_at", "2024-06-01 17:24:13.587955"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.0ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Daniel Sabourin"], ["external_ref", "123"], ["employer_id", 980190976], ["created_at", "2024-06-01 17:24:13.588438"], ["updated_at", "2024-06-01 17:24:13.588438"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.0ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Yuval Kordov"], ["external_ref", "456"], ["employer_id", 980190976], ["created_at", "2024-06-01 17:24:13.588782"], ["updated_at", "2024-06-01 17:24:13.588782"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.0ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Daniel Johnston"], ["external_ref", "789"], ["employer_id", 980190977], ["created_at", "2024-06-01 17:24:13.589130"], ["updated_at", "2024-06-01 17:24:13.589130"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployerCsvFormat Create (0.0ms)[0m  [1m[32mINSERT INTO "employer_csv_formats" ("external_ref_header", "date_header", "date_format", "amount_header", "amount_format", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["external_ref_header", "EmployeeNumber"], ["date_header", "CheckDate"], ["date_format", "%m/%d/%Y"], ["amount_header", "Amount"], ["amount_format", "STRING"], ["employer_id", 980190975], ["created_at", "2024-06-01 17:24:13.589413"], ["updated_at", "2024-06-01 17:24:13.589413"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployerCsvFormat Create (0.0ms)[0m  [1m[32mINSERT INTO "employer_csv_formats" ("external_ref_header", "date_header", "date_format", "amount_header", "amount_format", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["external_ref_header", "employee"], ["date_header", "earningDate"], ["date_format", "%Y-%m-%d"], ["amount_header", "netAmount"], ["amount_format", "DECIMAL"], ["employer_id", 980190976], ["created_at", "2024-06-01 17:24:13.589722"], ["updated_at", "2024-06-01 17:24:13.589722"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mEmployer Load (0.0ms)[0m  [1m[34mSELECT "employers".* FROM "employers" WHERE "employers"."id" = $1 LIMIT $2[0m  [["id", 980190975], ["LIMIT", 1]]
+  [1m[36mEmployerCsvFormat Load (0.0ms)[0m  [1m[34mSELECT "employer_csv_formats".* FROM "employer_csv_formats" WHERE "employer_csv_formats"."employer_id" = $1 LIMIT $2[0m  [["employer_id", 980190975], ["LIMIT", 1]]
+  [1m[36mEarning Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "earnings"[0m
+  [1m[36mEmployee Load (0.0ms)[0m  [1m[34mSELECT "employees".* FROM "employees" WHERE "employees"."external_ref" = $1 AND "employees"."employer_id" = $2 LIMIT $3[0m  [["external_ref", "A123"], ["employer_id", 980190975], ["LIMIT", 1]]
+  [1m[36mEmployee Load (0.0ms)[0m  [1m[34mSELECT "employees".* FROM "employees" WHERE "employees"."id" = $1 LIMIT $2[0m  [["id", 980190983], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEarning Create (0.1ms)[0m  [1m[32mINSERT INTO "earnings" ("earning_date", "amount", "employee_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["earning_date", "2021-12-14"], ["amount", "800.5"], ["employee_id", 980190983], ["created_at", "2024-06-01 17:24:13.590844"], ["updated_at", "2024-06-01 17:24:13.590844"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mEmployee Load (0.0ms)[0m  [1m[34mSELECT "employees".* FROM "employees" WHERE "employees"."external_ref" = $1 AND "employees"."employer_id" = $2 LIMIT $3[0m  [["external_ref", "B456"], ["employer_id", 980190975], ["LIMIT", 1]]
+  [1m[36mEmployee Load (0.0ms)[0m  [1m[34mSELECT "employees".* FROM "employees" WHERE "employees"."id" = $1 LIMIT $2[0m  [["id", 980190984], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEarning Create (0.0ms)[0m  [1m[32mINSERT INTO "earnings" ("earning_date", "amount", "employee_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["earning_date", "2021-12-21"], ["amount", "740.0"], ["employee_id", 980190984], ["created_at", "2024-06-01 17:24:13.591442"], ["updated_at", "2024-06-01 17:24:13.591442"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mEarning Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "earnings"[0m
+  [1m[36mEmployee Pluck (0.0ms)[0m  [1m[34mSELECT "employees"."id" FROM "employees" WHERE "employees"."employer_id" = $1[0m  [["employer_id", 980190975]]
+  [1m[36mEarning Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "earnings" WHERE "earnings"."employee_id" IN ($1, $2)[0m  [["employee_id", 980190983], ["employee_id", 980190984]]
+  [1m[36mEarning Load (0.0ms)[0m  [1m[34mSELECT "earnings".* FROM "earnings" WHERE "earnings"."employee_id" IN ($1, $2)[0m  [["employee_id", 980190983], ["employee_id", 980190984]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (1.4ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL PRIMARY KEY)[0m
+  [1m[35m (0.9ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying NOT NULL PRIMARY KEY, "value" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (0.0ms)[0m  [1m[34mSELECT pg_try_advisory_lock(5806263842556168285)[0m
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to CreateUsers (20240527233507)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (1.6ms)[0m  [1m[35mCREATE TABLE "users" ("id" bigserial primary key, "name" character varying, "email" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20240527233507"]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateEmployers (20240531161123)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.9ms)[0m  [1m[35mCREATE TABLE "employers" ("id" bigserial primary key, "name" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.0ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20240531161123"]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateEmployees (20240531161528)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (1.6ms)[0m  [1m[35mCREATE TABLE "employees" ("id" bigserial primary key, "name" character varying, "external_ref" character varying, "employer_id" bigint NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_f9eb73456e"
+FOREIGN KEY ("employer_id")
+  REFERENCES "employers" ("id")
+)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_employees_on_employer_id" ON "employees" ("employer_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.0ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20240531161528"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateEarnings (20240531161951)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.9ms)[0m  [1m[35mCREATE TABLE "earnings" ("id" bigserial primary key, "earning_date" date, "amount" decimal, "employee_id" bigint NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_7869e0dd26"
+FOREIGN KEY ("employee_id")
+  REFERENCES "employees" ("id")
+)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_earnings_on_employee_id" ON "earnings" ("employee_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.0ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20240531161951"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateEmployerCsvFormats (20240531164242)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.9ms)[0m  [1m[35mCREATE TABLE "employer_csv_formats" ("id" bigserial primary key, "external_ref_header" character varying, "date_header" character varying, "date_format" character varying, "amount_header" character varying, "amount_format" character varying, "employer_id" bigint NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_c07a831777"
+FOREIGN KEY ("employer_id")
+  REFERENCES "employers" ("id")
+)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_employer_csv_formats_on_employer_id" ON "employer_csv_formats" ("employer_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.0ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20240531164242"]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mActiveRecord::InternalMetadata Create (0.2ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "environment"], ["value", "test"], ["created_at", "2024-06-01 17:31:57.426772"], ["updated_at", "2024-06-01 17:31:57.426772"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT pg_advisory_unlock(5806263842556168285)[0m
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Pluck (0.1ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "schema_sha1"], ["LIMIT", 1]]
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Pluck (0.3ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Pluck (0.1ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Pluck (0.1ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[35m (70.5ms)[0m  [1m[35mDROP DATABASE IF EXISTS "earnings_creator_test"[0m
+  [1m[35m (71.2ms)[0m  [1m[35mCREATE DATABASE "earnings_creator_test" ENCODING = 'unicode'[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[35mCREATE EXTENSION IF NOT EXISTS "plpgsql"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE IF EXISTS "earnings" CASCADE[0m
+  [1m[35m (1.9ms)[0m  [1m[35mCREATE TABLE "earnings" ("id" bigserial primary key, "earning_date" date, "amount" decimal, "employee_id" bigint NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE INDEX "index_earnings_on_employee_id" ON "earnings" ("employee_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "employees" CASCADE[0m
+  [1m[35m (1.0ms)[0m  [1m[35mCREATE TABLE "employees" ("id" bigserial primary key, "name" character varying, "external_ref" character varying, "employer_id" bigint NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE INDEX "index_employees_on_employer_id" ON "employees" ("employer_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "employer_csv_formats" CASCADE[0m
+  [1m[35m (0.8ms)[0m  [1m[35mCREATE TABLE "employer_csv_formats" ("id" bigserial primary key, "external_ref_header" character varying, "date_header" character varying, "date_format" character varying, "amount_header" character varying, "amount_format" character varying, "employer_id" bigint NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE INDEX "index_employer_csv_formats_on_employer_id" ON "employer_csv_formats" ("employer_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "employers" CASCADE[0m
+  [1m[35m (0.8ms)[0m  [1m[35mCREATE TABLE "employers" ("id" bigserial primary key, "name" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "users" CASCADE[0m
+  [1m[35m (0.9ms)[0m  [1m[35mCREATE TABLE "users" ("id" bigserial primary key, "name" character varying, "email" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (0.7ms)[0m  [1m[35mALTER TABLE "earnings" ADD CONSTRAINT "fk_rails_7869e0dd26"
+FOREIGN KEY ("employee_id")
+  REFERENCES "employees" ("id")
+[0m
+  [1m[35m (0.3ms)[0m  [1m[35mALTER TABLE "employees" ADD CONSTRAINT "fk_rails_f9eb73456e"
+FOREIGN KEY ("employer_id")
+  REFERENCES "employers" ("id")
+[0m
+  [1m[35m (0.3ms)[0m  [1m[35mALTER TABLE "employer_csv_formats" ADD CONSTRAINT "fk_rails_c07a831777"
+FOREIGN KEY ("employer_id")
+  REFERENCES "employers" ("id")
+[0m
+  [1m[35m (0.7ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL PRIMARY KEY)[0m
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES (20240531164242)[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES
+(20240527233507),
+(20240531161123),
+(20240531161528),
+(20240531161951);
+
+[0m
+  [1m[35m (0.7ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying NOT NULL PRIMARY KEY, "value" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mActiveRecord::InternalMetadata Create (0.2ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "environment"], ["value", "test"], ["created_at", "2024-06-01 17:32:13.575184"], ["updated_at", "2024-06-01 17:32:13.575184"]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "schema_sha1"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mActiveRecord::InternalMetadata Create (0.1ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "schema_sha1"], ["value", "193688ab5055022b1f9c9947459045190c26d341"], ["created_at", "2024-06-01 17:32:13.581029"], ["updated_at", "2024-06-01 17:32:13.581029"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.3ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.4ms)[0m  [1m[35mALTER TABLE "schema_migrations" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "employees" DISABLE TRIGGER ALL;ALTER TABLE "earnings" DISABLE TRIGGER ALL;ALTER TABLE "employers" DISABLE TRIGGER ALL;ALTER TABLE "employer_csv_formats" DISABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" DISABLE TRIGGER ALL[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (1.6ms)[0m  [1m[31mDELETE FROM "earnings";
+DELETE FROM "employees";
+DELETE FROM "employer_csv_formats";
+DELETE FROM "employers";
+DELETE FROM "users";
+INSERT INTO "earnings" ("id", "earning_date", "amount", "employee_id", "created_at", "updated_at") VALUES (980190962, '2024-05-31', 9.99, 980190962, '2024-06-01 17:32:13.687795', '2024-06-01 17:32:13.687795'), (298486374, '2024-05-31', 9.99, 298486374, '2024-06-01 17:32:13.687795', '2024-06-01 17:32:13.687795');
+INSERT INTO "employees" ("id", "name", "external_ref", "employer_id", "created_at", "updated_at") VALUES (980190962, 'MyString', 'MyString', 980190962, '2024-06-01 17:32:13.691923', '2024-06-01 17:32:13.691923'), (298486374, 'MyString', 'MyString', 298486374, '2024-06-01 17:32:13.691923', '2024-06-01 17:32:13.691923');
+INSERT INTO "employer_csv_formats" ("id", "external_ref_header", "date_header", "date_format", "amount_header", "amount_format", "employer_id", "created_at", "updated_at") VALUES (980190962, 'MyString', 'MyString', 'MyString', 'MyString', 'MyString', 980190962, '2024-06-01 17:32:13.693601', '2024-06-01 17:32:13.693601'), (298486374, 'MyString', 'MyString', 'MyString', 'MyString', 'MyString', 298486374, '2024-06-01 17:32:13.693601', '2024-06-01 17:32:13.693601');
+INSERT INTO "employers" ("id", "name", "created_at", "updated_at") VALUES (980190962, 'MyString', '2024-06-01 17:32:13.695170', '2024-06-01 17:32:13.695170'), (298486374, 'MyString', '2024-06-01 17:32:13.695170', '2024-06-01 17:32:13.695170');
+INSERT INTO "users" ("id", "name", "email", "created_at", "updated_at") VALUES (980190962, 'MyString', 'MyString', '2024-06-01 17:32:13.695769', '2024-06-01 17:32:13.695769'), (298486374, 'MyString', 'MyString', '2024-06-01 17:32:13.695769', '2024-06-01 17:32:13.695769')[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.7ms)[0m  [1m[35mALTER TABLE "schema_migrations" ENABLE TRIGGER ALL;ALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "employees" ENABLE TRIGGER ALL;ALTER TABLE "earnings" ENABLE TRIGGER ALL;ALTER TABLE "employers" ENABLE TRIGGER ALL;ALTER TABLE "employer_csv_formats" ENABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" ENABLE TRIGGER ALL[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (5.3ms)[0m  [1m[35mdo $$
+  declare r record;
+BEGIN
+FOR r IN (
+  SELECT FORMAT(
+    'UPDATE pg_constraint SET convalidated=false WHERE conname = ''%I'' AND connamespace::regnamespace = ''%I''::regnamespace; ALTER TABLE %I.%I VALIDATE CONSTRAINT %I;',
+    constraint_name,
+    table_schema,
+    table_schema,
+    table_name,
+    constraint_name
+  ) AS constraint_check
+  FROM information_schema.table_constraints WHERE constraint_type = 'FOREIGN KEY'
+)
+  LOOP
+    EXECUTE (r.constraint_check);
+  END LOOP;
+END;
+$$;
+[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+---------------------------------------------------------------------
+EarningsCsvParserTest: test_should_create_earnings_for_first_employer
+---------------------------------------------------------------------
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployer Create (0.2ms)[0m  [1m[32mINSERT INTO "employers" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Acme Co"], ["created_at", "2024-06-01 17:32:13.718480"], ["updated_at", "2024-06-01 17:32:13.718480"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployer Create (0.1ms)[0m  [1m[32mINSERT INTO "employers" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "BetaCo"], ["created_at", "2024-06-01 17:32:13.719793"], ["updated_at", "2024-06-01 17:32:13.719793"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployer Create (0.1ms)[0m  [1m[32mINSERT INTO "employers" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "GammaCo"], ["created_at", "2024-06-01 17:32:13.720310"], ["updated_at", "2024-06-01 17:32:13.720310"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.2ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Alan Judson"], ["external_ref", "A123"], ["employer_id", 980190963], ["created_at", "2024-06-01 17:32:13.727345"], ["updated_at", "2024-06-01 17:32:13.727345"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.1ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Danila Szabo"], ["external_ref", "B456"], ["employer_id", 980190963], ["created_at", "2024-06-01 17:32:13.728163"], ["updated_at", "2024-06-01 17:32:13.728163"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.1ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Daniel Sabourin"], ["external_ref", "123"], ["employer_id", 980190964], ["created_at", "2024-06-01 17:32:13.728827"], ["updated_at", "2024-06-01 17:32:13.728827"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.1ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Yuval Kordov"], ["external_ref", "456"], ["employer_id", 980190964], ["created_at", "2024-06-01 17:32:13.729549"], ["updated_at", "2024-06-01 17:32:13.729549"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.1ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Daniel Johnston"], ["external_ref", "789"], ["employer_id", 980190965], ["created_at", "2024-06-01 17:32:13.730175"], ["updated_at", "2024-06-01 17:32:13.730175"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployerCsvFormat Create (0.2ms)[0m  [1m[32mINSERT INTO "employer_csv_formats" ("external_ref_header", "date_header", "date_format", "amount_header", "amount_format", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["external_ref_header", "EmployeeNumber"], ["date_header", "CheckDate"], ["date_format", "%m/%d/%Y"], ["amount_header", "Amount"], ["amount_format", "STRING"], ["employer_id", 980190963], ["created_at", "2024-06-01 17:32:13.733410"], ["updated_at", "2024-06-01 17:32:13.733410"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployerCsvFormat Create (0.1ms)[0m  [1m[32mINSERT INTO "employer_csv_formats" ("external_ref_header", "date_header", "date_format", "amount_header", "amount_format", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["external_ref_header", "employee"], ["date_header", "earningDate"], ["date_format", "%Y-%m-%d"], ["amount_header", "netAmount"], ["amount_format", "DECIMAL"], ["employer_id", 980190964], ["created_at", "2024-06-01 17:32:13.734043"], ["updated_at", "2024-06-01 17:32:13.734043"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mEmployer Load (0.1ms)[0m  [1m[34mSELECT "employers".* FROM "employers" WHERE "employers"."id" = $1 LIMIT $2[0m  [["id", 980190963], ["LIMIT", 1]]
+  [1m[36mEmployerCsvFormat Load (0.1ms)[0m  [1m[34mSELECT "employer_csv_formats".* FROM "employer_csv_formats" WHERE "employer_csv_formats"."employer_id" = $1 LIMIT $2[0m  [["employer_id", 980190963], ["LIMIT", 1]]
+  [1m[36mEarning Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "earnings"[0m
+  [1m[36mEmployee Load (0.1ms)[0m  [1m[34mSELECT "employees".* FROM "employees" WHERE "employees"."external_ref" = $1 AND "employees"."employer_id" = $2 LIMIT $3[0m  [["external_ref", "A123"], ["employer_id", 980190963], ["LIMIT", 1]]
+  [1m[36mEmployee Load (0.0ms)[0m  [1m[34mSELECT "employees".* FROM "employees" WHERE "employees"."id" = $1 LIMIT $2[0m  [["id", 980190963], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEarning Create (0.1ms)[0m  [1m[32mINSERT INTO "earnings" ("earning_date", "amount", "employee_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["earning_date", "2021-12-14"], ["amount", "800.5"], ["employee_id", 980190963], ["created_at", "2024-06-01 17:32:13.756514"], ["updated_at", "2024-06-01 17:32:13.756514"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mEmployee Load (0.0ms)[0m  [1m[34mSELECT "employees".* FROM "employees" WHERE "employees"."external_ref" = $1 AND "employees"."employer_id" = $2 LIMIT $3[0m  [["external_ref", "B456"], ["employer_id", 980190963], ["LIMIT", 1]]
+  [1m[36mEmployee Load (0.0ms)[0m  [1m[34mSELECT "employees".* FROM "employees" WHERE "employees"."id" = $1 LIMIT $2[0m  [["id", 980190964], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEarning Create (0.1ms)[0m  [1m[32mINSERT INTO "earnings" ("earning_date", "amount", "employee_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["earning_date", "2021-12-21"], ["amount", "740.0"], ["employee_id", 980190964], ["created_at", "2024-06-01 17:32:13.757710"], ["updated_at", "2024-06-01 17:32:13.757710"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mEarning Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "earnings"[0m
+  [1m[36mEmployee Pluck (0.0ms)[0m  [1m[34mSELECT "employees"."id" FROM "employees" WHERE "employees"."employer_id" = $1[0m  [["employer_id", 980190963]]
+  [1m[36mEarning Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "earnings" WHERE "earnings"."employee_id" IN ($1, $2)[0m  [["employee_id", 980190963], ["employee_id", 980190964]]
+  [1m[36mEarning Load (0.0ms)[0m  [1m[34mSELECT "earnings".* FROM "earnings" WHERE "earnings"."employee_id" IN ($1, $2)[0m  [["employee_id", 980190963], ["employee_id", 980190964]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+-------------------------------------------------------------------------
+EarningsCsvParserTest: test_should_not_create_earning_if_validations_fail
+-------------------------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployer Create (0.0ms)[0m  [1m[32mINSERT INTO "employers" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Acme Co"], ["created_at", "2024-06-01 17:32:13.759217"], ["updated_at", "2024-06-01 17:32:13.759217"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployer Create (0.0ms)[0m  [1m[32mINSERT INTO "employers" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "BetaCo"], ["created_at", "2024-06-01 17:32:13.759510"], ["updated_at", "2024-06-01 17:32:13.759510"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployer Create (0.0ms)[0m  [1m[32mINSERT INTO "employers" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "GammaCo"], ["created_at", "2024-06-01 17:32:13.760123"], ["updated_at", "2024-06-01 17:32:13.760123"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.1ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Alan Judson"], ["external_ref", "A123"], ["employer_id", 980190966], ["created_at", "2024-06-01 17:32:13.760535"], ["updated_at", "2024-06-01 17:32:13.760535"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.1ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Danila Szabo"], ["external_ref", "B456"], ["employer_id", 980190966], ["created_at", "2024-06-01 17:32:13.760927"], ["updated_at", "2024-06-01 17:32:13.760927"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.0ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Daniel Sabourin"], ["external_ref", "123"], ["employer_id", 980190967], ["created_at", "2024-06-01 17:32:13.761343"], ["updated_at", "2024-06-01 17:32:13.761343"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.0ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Yuval Kordov"], ["external_ref", "456"], ["employer_id", 980190967], ["created_at", "2024-06-01 17:32:13.761717"], ["updated_at", "2024-06-01 17:32:13.761717"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.0ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Daniel Johnston"], ["external_ref", "789"], ["employer_id", 980190968], ["created_at", "2024-06-01 17:32:13.762403"], ["updated_at", "2024-06-01 17:32:13.762403"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployerCsvFormat Create (0.1ms)[0m  [1m[32mINSERT INTO "employer_csv_formats" ("external_ref_header", "date_header", "date_format", "amount_header", "amount_format", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["external_ref_header", "EmployeeNumber"], ["date_header", "CheckDate"], ["date_format", "%m/%d/%Y"], ["amount_header", "Amount"], ["amount_format", "STRING"], ["employer_id", 980190966], ["created_at", "2024-06-01 17:32:13.762722"], ["updated_at", "2024-06-01 17:32:13.762722"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployerCsvFormat Create (0.1ms)[0m  [1m[32mINSERT INTO "employer_csv_formats" ("external_ref_header", "date_header", "date_format", "amount_header", "amount_format", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["external_ref_header", "employee"], ["date_header", "earningDate"], ["date_format", "%Y-%m-%d"], ["amount_header", "netAmount"], ["amount_format", "DECIMAL"], ["employer_id", 980190967], ["created_at", "2024-06-01 17:32:13.763057"], ["updated_at", "2024-06-01 17:32:13.763057"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mEmployer Load (0.0ms)[0m  [1m[34mSELECT "employers".* FROM "employers" WHERE "employers"."id" = $1 LIMIT $2[0m  [["id", 980190966], ["LIMIT", 1]]
+  [1m[36mEmployerCsvFormat Load (0.0ms)[0m  [1m[34mSELECT "employer_csv_formats".* FROM "employer_csv_formats" WHERE "employer_csv_formats"."employer_id" = $1 LIMIT $2[0m  [["employer_id", 980190966], ["LIMIT", 1]]
+Invalid date: NOT_A_DATE cannot be parsed with format %m/%d/%Y
+  [1m[36mEmployee Load (0.0ms)[0m  [1m[34mSELECT "employees".* FROM "employees" WHERE "employees"."external_ref" = $1 AND "employees"."employer_id" = $2 LIMIT $3[0m  [["external_ref", "A123"], ["employer_id", 980190966], ["LIMIT", 1]]
+  [1m[36mEmployee Load (0.0ms)[0m  [1m[34mSELECT "employees".* FROM "employees" WHERE "employees"."id" = $1 LIMIT $2[0m  [["id", 980190968], ["LIMIT", 1]]
+There were errors with the following rows: 
+Error with row A123,NOT_A_DATE,$49.99
+: ["Earning date can't be blank"]
+  [1m[36mEarning Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "earnings"[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+--------------------------------------------------------------------------------
+EarningsCsvParserTest: test_show_return_errors_if_there's_no_employer_csv_format
+--------------------------------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployer Create (0.0ms)[0m  [1m[32mINSERT INTO "employers" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Acme Co"], ["created_at", "2024-06-01 17:32:13.767143"], ["updated_at", "2024-06-01 17:32:13.767143"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployer Create (0.0ms)[0m  [1m[32mINSERT INTO "employers" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "BetaCo"], ["created_at", "2024-06-01 17:32:13.767410"], ["updated_at", "2024-06-01 17:32:13.767410"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployer Create (0.0ms)[0m  [1m[32mINSERT INTO "employers" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "GammaCo"], ["created_at", "2024-06-01 17:32:13.767650"], ["updated_at", "2024-06-01 17:32:13.767650"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.0ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Alan Judson"], ["external_ref", "A123"], ["employer_id", 980190969], ["created_at", "2024-06-01 17:32:13.767995"], ["updated_at", "2024-06-01 17:32:13.767995"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.1ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Danila Szabo"], ["external_ref", "B456"], ["employer_id", 980190969], ["created_at", "2024-06-01 17:32:13.768514"], ["updated_at", "2024-06-01 17:32:13.768514"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.0ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Daniel Sabourin"], ["external_ref", "123"], ["employer_id", 980190970], ["created_at", "2024-06-01 17:32:13.768898"], ["updated_at", "2024-06-01 17:32:13.768898"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.0ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Yuval Kordov"], ["external_ref", "456"], ["employer_id", 980190970], ["created_at", "2024-06-01 17:32:13.769210"], ["updated_at", "2024-06-01 17:32:13.769210"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.0ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Daniel Johnston"], ["external_ref", "789"], ["employer_id", 980190971], ["created_at", "2024-06-01 17:32:13.769555"], ["updated_at", "2024-06-01 17:32:13.769555"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployerCsvFormat Create (0.0ms)[0m  [1m[32mINSERT INTO "employer_csv_formats" ("external_ref_header", "date_header", "date_format", "amount_header", "amount_format", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["external_ref_header", "EmployeeNumber"], ["date_header", "CheckDate"], ["date_format", "%m/%d/%Y"], ["amount_header", "Amount"], ["amount_format", "STRING"], ["employer_id", 980190969], ["created_at", "2024-06-01 17:32:13.769832"], ["updated_at", "2024-06-01 17:32:13.769832"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployerCsvFormat Create (0.1ms)[0m  [1m[32mINSERT INTO "employer_csv_formats" ("external_ref_header", "date_header", "date_format", "amount_header", "amount_format", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["external_ref_header", "employee"], ["date_header", "earningDate"], ["date_format", "%Y-%m-%d"], ["amount_header", "netAmount"], ["amount_format", "DECIMAL"], ["employer_id", 980190970], ["created_at", "2024-06-01 17:32:13.770436"], ["updated_at", "2024-06-01 17:32:13.770436"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mEmployer Load (0.0ms)[0m  [1m[34mSELECT "employers".* FROM "employers" WHERE "employers"."id" = $1 LIMIT $2[0m  [["id", 980190971], ["LIMIT", 1]]
+  [1m[36mEmployerCsvFormat Load (0.0ms)[0m  [1m[34mSELECT "employer_csv_formats".* FROM "employer_csv_formats" WHERE "employer_csv_formats"."employer_id" = $1 LIMIT $2[0m  [["employer_id", 980190971], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+---------------------------------------------------------------------
+EarningsCsvParserTest: test_show_return_errors_if_there's_no_employer
+---------------------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployer Create (0.0ms)[0m  [1m[32mINSERT INTO "employers" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Acme Co"], ["created_at", "2024-06-01 17:32:13.771200"], ["updated_at", "2024-06-01 17:32:13.771200"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployer Create (0.0ms)[0m  [1m[32mINSERT INTO "employers" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "BetaCo"], ["created_at", "2024-06-01 17:32:13.771445"], ["updated_at", "2024-06-01 17:32:13.771445"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployer Create (0.0ms)[0m  [1m[32mINSERT INTO "employers" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "GammaCo"], ["created_at", "2024-06-01 17:32:13.771673"], ["updated_at", "2024-06-01 17:32:13.771673"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.0ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Alan Judson"], ["external_ref", "A123"], ["employer_id", 980190972], ["created_at", "2024-06-01 17:32:13.772004"], ["updated_at", "2024-06-01 17:32:13.772004"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.0ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Danila Szabo"], ["external_ref", "B456"], ["employer_id", 980190972], ["created_at", "2024-06-01 17:32:13.772319"], ["updated_at", "2024-06-01 17:32:13.772319"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.0ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Daniel Sabourin"], ["external_ref", "123"], ["employer_id", 980190973], ["created_at", "2024-06-01 17:32:13.772675"], ["updated_at", "2024-06-01 17:32:13.772675"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.0ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Yuval Kordov"], ["external_ref", "456"], ["employer_id", 980190973], ["created_at", "2024-06-01 17:32:13.773238"], ["updated_at", "2024-06-01 17:32:13.773238"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.0ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Daniel Johnston"], ["external_ref", "789"], ["employer_id", 980190974], ["created_at", "2024-06-01 17:32:13.773586"], ["updated_at", "2024-06-01 17:32:13.773586"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployerCsvFormat Create (0.0ms)[0m  [1m[32mINSERT INTO "employer_csv_formats" ("external_ref_header", "date_header", "date_format", "amount_header", "amount_format", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["external_ref_header", "EmployeeNumber"], ["date_header", "CheckDate"], ["date_format", "%m/%d/%Y"], ["amount_header", "Amount"], ["amount_format", "STRING"], ["employer_id", 980190972], ["created_at", "2024-06-01 17:32:13.773861"], ["updated_at", "2024-06-01 17:32:13.773861"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployerCsvFormat Create (0.0ms)[0m  [1m[32mINSERT INTO "employer_csv_formats" ("external_ref_header", "date_header", "date_format", "amount_header", "amount_format", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["external_ref_header", "employee"], ["date_header", "earningDate"], ["date_format", "%Y-%m-%d"], ["amount_header", "netAmount"], ["amount_format", "DECIMAL"], ["employer_id", 980190973], ["created_at", "2024-06-01 17:32:13.774153"], ["updated_at", "2024-06-01 17:32:13.774153"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mEmployer Load (0.0ms)[0m  [1m[34mSELECT "employers".* FROM "employers" WHERE "employers"."id" = $1 LIMIT $2[0m  [["id", 999], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+----------------------------------------------------------------------
+EarningsCsvParserTest: test_should_create_earnings_for_second_employer
+----------------------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployer Create (0.0ms)[0m  [1m[32mINSERT INTO "employers" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Acme Co"], ["created_at", "2024-06-01 17:32:13.774717"], ["updated_at", "2024-06-01 17:32:13.774717"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployer Create (0.0ms)[0m  [1m[32mINSERT INTO "employers" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "BetaCo"], ["created_at", "2024-06-01 17:32:13.775133"], ["updated_at", "2024-06-01 17:32:13.775133"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployer Create (0.0ms)[0m  [1m[32mINSERT INTO "employers" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "GammaCo"], ["created_at", "2024-06-01 17:32:13.775382"], ["updated_at", "2024-06-01 17:32:13.775382"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.0ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Alan Judson"], ["external_ref", "A123"], ["employer_id", 980190975], ["created_at", "2024-06-01 17:32:13.775724"], ["updated_at", "2024-06-01 17:32:13.775724"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.0ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Danila Szabo"], ["external_ref", "B456"], ["employer_id", 980190975], ["created_at", "2024-06-01 17:32:13.776080"], ["updated_at", "2024-06-01 17:32:13.776080"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.0ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Daniel Sabourin"], ["external_ref", "123"], ["employer_id", 980190976], ["created_at", "2024-06-01 17:32:13.776439"], ["updated_at", "2024-06-01 17:32:13.776439"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.0ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Yuval Kordov"], ["external_ref", "456"], ["employer_id", 980190976], ["created_at", "2024-06-01 17:32:13.776997"], ["updated_at", "2024-06-01 17:32:13.776997"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployee Create (0.0ms)[0m  [1m[32mINSERT INTO "employees" ("name", "external_ref", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Daniel Johnston"], ["external_ref", "789"], ["employer_id", 980190977], ["created_at", "2024-06-01 17:32:13.777372"], ["updated_at", "2024-06-01 17:32:13.777372"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployerCsvFormat Create (0.1ms)[0m  [1m[32mINSERT INTO "employer_csv_formats" ("external_ref_header", "date_header", "date_format", "amount_header", "amount_format", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["external_ref_header", "EmployeeNumber"], ["date_header", "CheckDate"], ["date_format", "%m/%d/%Y"], ["amount_header", "Amount"], ["amount_format", "STRING"], ["employer_id", 980190975], ["created_at", "2024-06-01 17:32:13.777652"], ["updated_at", "2024-06-01 17:32:13.777652"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEmployerCsvFormat Create (0.1ms)[0m  [1m[32mINSERT INTO "employer_csv_formats" ("external_ref_header", "date_header", "date_format", "amount_header", "amount_format", "employer_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["external_ref_header", "employee"], ["date_header", "earningDate"], ["date_format", "%Y-%m-%d"], ["amount_header", "netAmount"], ["amount_format", "DECIMAL"], ["employer_id", 980190976], ["created_at", "2024-06-01 17:32:13.777972"], ["updated_at", "2024-06-01 17:32:13.777972"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mEmployer Load (0.0ms)[0m  [1m[34mSELECT "employers".* FROM "employers" WHERE "employers"."id" = $1 LIMIT $2[0m  [["id", 980190976], ["LIMIT", 1]]
+  [1m[36mEmployerCsvFormat Load (0.0ms)[0m  [1m[34mSELECT "employer_csv_formats".* FROM "employer_csv_formats" WHERE "employer_csv_formats"."employer_id" = $1 LIMIT $2[0m  [["employer_id", 980190976], ["LIMIT", 1]]
+  [1m[36mEarning Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "earnings"[0m
+  [1m[36mEmployee Load (0.1ms)[0m  [1m[34mSELECT "employees".* FROM "employees" WHERE "employees"."external_ref" = $1 AND "employees"."employer_id" = $2 LIMIT $3[0m  [["external_ref", "123"], ["employer_id", 980190976], ["LIMIT", 1]]
+  [1m[36mEmployee Load (0.0ms)[0m  [1m[34mSELECT "employees".* FROM "employees" WHERE "employees"."id" = $1 LIMIT $2[0m  [["id", 980190985], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEarning Create (0.1ms)[0m  [1m[32mINSERT INTO "earnings" ("earning_date", "amount", "employee_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["earning_date", "2021-12-14"], ["amount", "800.5"], ["employee_id", 980190985], ["created_at", "2024-06-01 17:32:13.779081"], ["updated_at", "2024-06-01 17:32:13.779081"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mEmployee Load (0.0ms)[0m  [1m[34mSELECT "employees".* FROM "employees" WHERE "employees"."external_ref" = $1 AND "employees"."employer_id" = $2 LIMIT $3[0m  [["external_ref", "456"], ["employer_id", 980190976], ["LIMIT", 1]]
+  [1m[36mEmployee Load (0.0ms)[0m  [1m[34mSELECT "employees".* FROM "employees" WHERE "employees"."id" = $1 LIMIT $2[0m  [["id", 980190986], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mEarning Create (0.1ms)[0m  [1m[32mINSERT INTO "earnings" ("earning_date", "amount", "employee_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["earning_date", "2021-12-21"], ["amount", "740.0"], ["employee_id", 980190986], ["created_at", "2024-06-01 17:32:13.779911"], ["updated_at", "2024-06-01 17:32:13.779911"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mEarning Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "earnings"[0m
+  [1m[36mEmployee Pluck (0.0ms)[0m  [1m[34mSELECT "employees"."id" FROM "employees" WHERE "employees"."employer_id" = $1[0m  [["employer_id", 980190976]]
+  [1m[36mEarning Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "earnings" WHERE "earnings"."employee_id" IN ($1, $2)[0m  [["employee_id", 980190985], ["employee_id", 980190986]]
+  [1m[36mEarning Load (0.0ms)[0m  [1m[34mSELECT "earnings".* FROM "earnings" WHERE "earnings"."employee_id" IN ($1, $2)[0m  [["employee_id", 980190985], ["employee_id", 980190986]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK[0m
