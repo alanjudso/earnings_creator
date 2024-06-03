@@ -32,7 +32,7 @@ class EarningsCsvParser
   end
   
   def get_employer employer_id
-    Employer.find_by!(id: employer_id) 
+    Employer.find(employer_id) 
   end
   
   def get_employee_id external_ref
