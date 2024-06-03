@@ -33,8 +33,8 @@ NOTE: I added users table when I was creating the postgresql project. I didn't r
 
 Things I changed:
 
-- I added `!` to the `.find_by` in the GET calls for Employer and EmployerCsvFormat, so it returns an error if one of them is missing. After all, you need those to run yit.
-- I replace `puts` with Rails.logger.info because they are persisted and might be useful if you have to keep track of which rows were not formatted correctly. It's a trade-off, because if this is only used in the terminal, puts messages print right to the terminal, but can have unintended side effects.
+- I added `!` to the `.find_by` in the GET calls for Employer and EmployerCsvFormat, so it returns an error if one of them is missing. After all, you need those to run it.
+- I replaced `puts` with Rails.logger.info because they are persisted and might be useful if you have to keep track of which rows were not formatted correctly. It's a trade-off, because if this is only used in the terminal, puts messages print right to the terminal, but can have unintended side effects.
 - I created instance variables for the employer and employer_csv_format - they both are fetched during initialization.
   If the employer is missing, it fails right away. It also cuts down on calling them all the time throughout the class.
 - I added some simple unit tests. Not 100% coverage, but just enough to let you know I can make tests.
