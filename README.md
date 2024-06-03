@@ -15,7 +15,6 @@ Hi - I've added seed data!
 - How to run it in console?
   - `bin/rails c`
   - `e = EarningsCsvParser.new "EmployeeNumber,CheckDate,Amount\nA123,12/14/2021,$800.50\nB456,12/21/2021,$740.00", 1`
-  - This will return one Earning (one will fail on validation of date.)
   - `e.create_earnings`
 - How to run the test suite
   `bin/rails test`
