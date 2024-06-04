@@ -16,9 +16,7 @@ class EarningsCsvParser
       errors = []
       csv.each do |row|
         e = create_earning(row)
-        if e.valid?
-          e.save
-        else
+        unless e.save
           errors << "Error with row #{row}: #{e.errors.full_messages}"
         end
       end
